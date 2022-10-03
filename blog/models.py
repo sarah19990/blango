@@ -1,6 +1,5 @@
 from django.db import models
 from django.conf import settings
-from django.contrib.contenttypes.fields import GenericRelation
 
 class Tag(models.Model):
     value = models.TextField(max_length=100)
@@ -18,7 +17,7 @@ class Post(models.Model):
     summary = models.TextField(max_length=500)
     content = models.TextField()
     tags = models.ManyToManyField(Tag, related_name="posts")
-    comments = GenericRelation(Comment)
+    
 
     def __str__(self):
         return self.title

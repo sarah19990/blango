@@ -1,14 +1,29 @@
 from django.contrib.auth import get_user_model
 from django import template
 from django.utils.html import escape
+from blog.models import Post
 
 from django.utils.html import format_html
 user_model = get_user_model()
 
 register = template.Library()
 
+@register.inclusion_tag("blog/post-list.html")
+def recent_posts(post):
+    posts = Post.objects.exclude(pk=post.pk)[:5]
+    return {"title": "Recent Posts", "posts": posts}
+
+@register.simple_tag
+def row(extra_classes=""):
+    return format_html('<div class="row {}">', extra_classes)
+
+
+@register.simple_tag
+def endrow():
+    return format_html("</div>")
+
 @register.filter
-def author_details(author, current_user=None):
+def author_details(author, current_user):
     if not isinstance(author, user_model):
         # return empty string as safe default
         return ""
